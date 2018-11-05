@@ -1,0 +1,43 @@
+
+class Particle < Bi::Sprite
+  attr_accessor :life, :life_max
+  def initialize(tex,x,y)
+    super tex
+    self.set_position x,y
+    self.anchor = :center
+    self.set_color rand(0xFF),rand(0xFF),rand(0xFF),0xff
+    @life = @life_max = 20 + rand(20)
+  end
+  def life=(life)
+    if life < 0
+      self.remove_from_parent
+    else
+      @life = life
+      self.set_alpha(0xff*@life/@life_max)
+    end
+  end
+end
+
+def create_world
+  Bi::init 480,320,60,"trace cursor"
+
+  img = Bi::TextureImage.new "assets/ball.png", false, 0
+  tex = Bi::Texture.new img,0,0,img.w,img.h
+
+  root = Bi::Node.new
+  root.on_move_cursor {|n,x,y|
+    particle = Particle.new tex, x, y
+    particle.on_update {|n,delta|
+      n.life -= 1
+    }
+    root.add particle
+  }
+
+  # layer
+  layer = Bi::Layer.new
+  layer.root = root
+  Bi::add_layer layer
+end
+
+create_world
+Bi::start_run_loop
