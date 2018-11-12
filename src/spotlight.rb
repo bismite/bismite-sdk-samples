@@ -1,10 +1,10 @@
 
 def create_world
-  Bi.init 640,480,30,"spotlight"
+  Bi.init 640,480,title:"spotlight"
 
   # background
-  img = Bi::TextureImage.new "assets/sky.png", false, 0
-  bg = Bi::Sprite.new Bi::Texture.new img,0,0,img.w,img.h
+  bg_img = Bi::TextureImage.new "assets/sky.png", false
+  bg = Bi::Sprite.new Bi::Texture.new bg_img,0,0,bg_img.w,bg_img.h
   # shadow
   shadow = Bi::Node.new
   shadow.set_bound 0,0,640,480
@@ -14,20 +14,22 @@ def create_world
   # layer
   layer = Bi::Layer.new
   layer.root = bg
+  layer.set_texture_image 0, bg_img
   Bi::add_layer layer
 
   # sportlight
-  img = Bi::TextureImage.new "assets/circle256.png", false, 1
+  img = Bi::TextureImage.new "assets/circle256.png", false
   spotlight = Bi::Sprite.new Bi::Texture.new img,0,0,img.w,img.h
   spotlight.anchor = :center
   spotlight.set_position Bi.w/2, Bi.h/2
+
   # spotlight layer
   layer = Bi::Layer.new
   layer.root = spotlight
-  Bi::add_layer layer
-  # blending
+  layer.set_texture_image 0, img
   layer.blend_src = Bi::Layer::GL_DST_COLOR
   layer.blend_dst = Bi::Layer::GL_ONE
+  Bi::add_layer layer
 
   # spin
   spotlight.on_update{|n,delta| n.angle+=1 }

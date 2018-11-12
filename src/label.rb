@@ -1,10 +1,10 @@
 
 def create_world
-  Bi::init 480,320,60,"Label"
+  Bi::init 480,320, title:"Label"
 
   root = Bi::Node.new
 
-  img = Bi::TextureImage.new "assets/gohufont.png", false, 0
+  img = Bi::TextureImage.new "assets/gohufont.png", false
   font = Bi::Font.new img, "assets/gohufont-bold-14-0.0.dat"
 
   # label-1
@@ -29,6 +29,7 @@ def create_world
   # layer
   layer = Bi::Layer.new
   layer.root = root
+  layer.set_texture_image 0, img
   Bi::add_layer layer
 end
 

@@ -1,9 +1,9 @@
 
 def create_world
-  Bi.init 480,320,30,"Texture"
+  Bi.init 480,320,title:"Texture"
 
   # texture image
-  img = Bi::TextureImage.new "assets/face01.png", false, 0
+  img = Bi::TextureImage.new "assets/face01.png", false
   # texture
   tex = Bi::Texture.new img,0,0,img.w,img.h
   # sprite
@@ -15,6 +15,7 @@ def create_world
   # layer
   layer = Bi::Layer.new
   layer.root = face
+  layer.set_texture_image 0, img
   Bi::add_layer layer
 end
 

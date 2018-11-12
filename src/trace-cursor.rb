@@ -19,9 +19,9 @@ class Particle < Bi::Sprite
 end
 
 def create_world
-  Bi::init 480,320,60,"trace cursor"
+  Bi::init 480,320,title:"trace cursor"
 
-  img = Bi::TextureImage.new "assets/ball.png", false, 0
+  img = Bi::TextureImage.new "assets/ball.png", false
   tex = Bi::Texture.new img,0,0,img.w,img.h
 
   root = Bi::Node.new
@@ -36,6 +36,7 @@ def create_world
   # layer
   layer = Bi::Layer.new
   layer.root = root
+  layer.set_texture_image 0, img
   Bi::add_layer layer
 end
 

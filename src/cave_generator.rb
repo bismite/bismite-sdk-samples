@@ -70,7 +70,7 @@ class CaveGeneratorExample < Bi::Node
 
 end
 
-Bi.init 192,192,60,"cave generator"
+Bi.init 192,192, title:"cave generator"
 layer = Bi::Layer.new
 layer.root = CaveGeneratorExample.new(192,192)
 Bi::add_layer layer

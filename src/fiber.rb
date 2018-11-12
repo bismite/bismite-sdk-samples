@@ -7,10 +7,10 @@ class Fiber
 end
 
 def create_world
-  Bi.init 480,320,30,"Fiber"
+  Bi.init 480,320, title:"Fiber"
 
   # create sprite
-  img = Bi::TextureImage.new "assets/face01.png", false, 0
+  img = Bi::TextureImage.new "assets/face01.png", false
   tex = Bi::Texture.new img,0,0,img.w,img.h
   face = Bi::Sprite.new tex
   face.texture = tex
@@ -36,6 +36,7 @@ def create_world
   # layer
   layer = Bi::Layer.new
   layer.root = face
+  layer.set_texture_image 0, img
   Bi::add_layer layer
 end
 

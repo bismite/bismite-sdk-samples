@@ -36,13 +36,10 @@ class Dungeon < Bi::Node
     }
   end
 
-  def initialize(w,h)
+  def initialize(w,h,wall,floor)
     super
     self.set_bound 0,0, w,h
     t = self.add_timer(1000,-1){|n,now,timer| Bi::title = "FPS:#{Bi::fps}" }
-
-    wall = Bi::TextureImage.new "assets/wall.png", false, 0
-    floor = Bi::TextureImage.new "assets/floor.png", false, 1
 
     @tiles = {
       wall: 3.times.map{|i| Bi::Texture.new(wall,i*32,0,32,32) },
@@ -80,7 +77,7 @@ class Dungeon < Bi::Node
 end
 
 def add_fps_layer
-  img = Bi::TextureImage.new "assets/gohufont.png", true, 0
+  img = Bi::TextureImage.new "assets/gohufont.png", true
   font = Bi::Font.new img, "assets/gohufont-bold-14-0.0.dat"
   label = Bi::Label.new font
   label.anchor = :north_west
@@ -90,13 +87,19 @@ def add_fps_layer
   # layer
   layer = Bi::Layer.new
   layer.root = label
+  layer.set_texture_image 0, img
   Bi::add_layer layer
 end
 
-Bi.init 1024,704,0,"DungeonExample"
+Bi.init 1024,704, title:"Dungeon Example"
 Bi.debug = true
+
 layer = DungeonLayer.instance
-layer.root = Dungeon.new(1024,768)
+wall = Bi::TextureImage.new "assets/wall.png", false
+floor = Bi::TextureImage.new "assets/floor.png", false
+layer.root = Dungeon.new(1024,768,wall,floor)
+layer.set_texture_image 0, wall
+layer.set_texture_image 1, floor
 Bi::add_layer layer
 
 add_fps_layer

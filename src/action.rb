@@ -1,10 +1,9 @@
 class ActionSample < Bi::Node
 
-  def initialize(w,h)
+  def initialize(w,h,img)
     super
     self.set_bound 0,0,w,h
 
-    img = Bi::TextureImage.new "assets/face01.png", false, 0
     face = Bi::Sprite.new Bi::Texture.new(img,0,0,img.w,img.h)
     face.anchor = :center
     face.set_position w/2, h/2
@@ -32,9 +31,11 @@ class ActionSample < Bi::Node
   end
 end
 
-Bi.init 480,320,60,"Action"
+Bi.init 480,320,title:"Action"
+img = Bi::TextureImage.new "assets/face01.png", false
 layer = Bi::Layer.new
-layer.root = ActionSample.new 480, 320
+layer.root = ActionSample.new 480, 320, img
+layer.set_texture_image 0, img
 Bi::add_layer layer
 
 Bi::start_run_loop
