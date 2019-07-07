@@ -7,7 +7,8 @@ def create_world
   bg = Bi::Sprite.new Bi::Texture.new bg_img,0,0,bg_img.w,bg_img.h
   # shadow
   shadow = Bi::Node.new
-  shadow.set_bound 0,0,640,480
+  shadow.set_position 0,0
+  shadow.set_size 640,480
   shadow.set_color 0,0,0,128
   bg.add shadow
 
