@@ -79,7 +79,7 @@ end
 
 def add_fps_layer
   img = Bi::TextureImage.new "assets/gohufont.png", true
-  font = Bi::Font.new img, "assets/gohufont-bold-14-0.0.dat"
+  font = Bi::Font.read img, "assets/gohufont-bold-14-0.0.dat"
   label = Bi::Label.new font
   label.anchor = :north_west
   label.set_color 0,0,0,128
