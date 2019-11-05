@@ -12,7 +12,8 @@ class CaveGeneratorExample < Bi::Node
 
   def initialize(w,h)
     super
-    self.set_bound 0,0, w,h
+    self.set_position 0,0
+    self.set_size w,h
 
     t = self.add_timer(1000,-1){|n,now,timer| Bi::title = "FPS:#{Bi::fps}" }
     p [:fps_timer,t]
@@ -34,7 +35,8 @@ class CaveGeneratorExample < Bi::Node
     @nodes = grid_width.times.map{|x|
       grid_height.times.map{|y|
         n = Bi::Node.new
-        n.set_bound(x*4,y*4,4,4)
+        n.set_position x*4,y*4
+        n.set_size 4,4
         add_child n
         n
       }

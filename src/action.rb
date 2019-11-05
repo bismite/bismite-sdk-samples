@@ -2,7 +2,8 @@ class ActionSample < Bi::Node
 
   def initialize(w,h,img)
     super
-    self.set_bound 0,0,w,h
+    self.set_position 0,0
+    self.set_size w,h
 
     face = Bi::Sprite.new Bi::Texture.new(img,0,0,img.w,img.h)
     face.anchor = :center

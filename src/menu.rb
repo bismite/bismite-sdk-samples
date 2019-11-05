@@ -53,7 +53,7 @@ def create_world
   Bi::init 480,320, title:"click menu"
 
   img = Bi::TextureImage.new "assets/gohufont.png", true
-  font = Bi::Font.new img, "assets/gohufont-14-0.0.dat"
+  font = Bi::Font::read img, "assets/gohufont-14-0.0.dat"
   face_image = Bi::TextureImage.new "assets/face01.png", false
 
   root = Bi::Node.new

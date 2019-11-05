@@ -38,7 +38,8 @@ class Dungeon < Bi::Node
 
   def initialize(w,h,wall,floor)
     super
-    self.set_bound 0,0, w,h
+    self.set_position 0,0
+    self.set_size w,h
     t = self.add_timer(1000,-1){|n,now,timer| Bi::title = "FPS:#{Bi::fps}" }
 
     @tiles = {

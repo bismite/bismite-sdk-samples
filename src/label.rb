@@ -5,7 +5,7 @@ def create_world
   root = Bi::Node.new
 
   img = Bi::TextureImage.new "assets/gohufont.png", false
-  font = Bi::Font.new img, "assets/gohufont-bold-14-0.0.dat"
+  font = Bi::Font::read img, "assets/gohufont-bold-14-0.0.dat"
 
   # label-1
   label = Bi::Label.new font

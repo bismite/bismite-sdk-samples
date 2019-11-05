@@ -32,15 +32,17 @@ class ParticleExample < Bi::Node
   def initialize(w,h,img)
     super()
     self.set_color 32,0,0,0xff
-    @w = w
-    @h = h
-    self.set_bound 0,0, w,h
+    self.set_position 0,0
+    self.set_size w,h
     @img = img
     @tex = Bi::Texture.new @img,0,0,@img.w,@img.h
+    self.on_click{|node,x,y,button,pressed|
+      self.add_particle(x,y,rand(20..100)) if pressed
+    }
   end
-  def add_particle(num)
+  def add_particle(x,y,num)
     num.times{
-      particle = Particle.new @tex, rand(@w), rand(@h)
+      particle = Particle.new @tex, x, y
       particle.on_update :my_update
       self.add particle
     }
@@ -52,7 +54,6 @@ def create_world
 
   img = Bi::TextureImage.new "assets/ball.png", false
   root = ParticleExample.new(480,320,img)
-  root.on_click{ root.add_particle(rand(100)) }
 
   # layer
   layer = Bi::Layer.new
