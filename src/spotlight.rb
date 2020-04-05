@@ -1,6 +1,6 @@
 
 def create_world
-  Bi.init 640,480,title:"spotlight"
+  Bi.init 480,320,title:"spotlight"
 
   # background
   bg_img = Bi::TextureImage.new "assets/sky.png", false

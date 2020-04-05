@@ -36,8 +36,11 @@ class Dungeon < Bi::Node
     }
   end
 
-  def initialize(w,h,wall,floor)
+  def initialize(wall,floor)
     super
+    w = Bi.w
+    h = Bi.h
+    self.scale_x = self.scale_y = 0.5
     self.set_position 0,0
     self.set_size w,h
     t = self.add_timer(1000,-1){|n,now,timer| Bi::title = "FPS:#{Bi::fps}" }
@@ -92,13 +95,13 @@ def add_fps_layer
   Bi::add_layer layer
 end
 
-Bi.init 1024,704, title:"Dungeon Example"
+Bi.init 480,320, title:"Dungeon Example"
 Bi.debug = true
 
 layer = DungeonLayer.instance
 wall = Bi::TextureImage.new "assets/wall.png", false
 floor = Bi::TextureImage.new "assets/floor.png", false
-layer.root = Dungeon.new(1024,768,wall,floor)
+layer.root = Dungeon.new(wall,floor)
 layer.set_texture_image 0, wall
 layer.set_texture_image 1, floor
 Bi::add_layer layer

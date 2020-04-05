@@ -8,13 +8,6 @@ def run(cmd)
   `#{cmd}`
 end
 
-def input(name,wid)
-  return unless File.exists? "scripts/input/#{name}.input"
-  File.read("#{name}.input").each_line{|l|
-    run "xdotool key --window #{wid} --delay #{l}"
-  }
-end
-
 def screenshot(name)
   pid = Process.fork do
     exec "mruby src/#{name}.rb"
@@ -29,10 +22,14 @@ def screenshot(name)
     sleep 1
   end
 
+  input_pid = nil
   unless wid.empty?
     puts "wid: #{wid}"
     FileUtils.mkdir_p "tmp/#{name}"
-    Process.fork{ input name,wid }
+    input_pid = Process.fork do
+      input = "scripts/input/#{name}.rb"
+      exec "ruby #{input} #{wid}" if File.exists? input
+    end
     20.times do |i|
       run "xwd -silent -id #{wid} | convert xwd:- tmp/#{name}/#{i}.png"
       sleep 0.1
@@ -40,6 +37,7 @@ def screenshot(name)
     run "apngasm tmp/#{name}.png tmp/#{name}/*.png"
   end
 
+  Process.kill("HUP", input_pid) if input_pid
   Process.kill("HUP", pid)
 end
 
@@ -48,7 +46,7 @@ FileUtils.mkdir_p "build"
  action
  cave_generator
  dungeon
- event-keyboard
+ keyboard
  fiber
  global_update_callback
  label
