@@ -36,9 +36,12 @@ class ParticleExample < Bi::Node
     self.set_size w,h
     @img = img
     @tex = Bi::Texture.new @img,0,0,@img.w,@img.h
-    self.on_click{|node,x,y,button,pressed|
-      self.add_particle(x,y,rand(20..100)) if pressed
-    }
+
+    # self.on_click{|node,x,y,button,pressed|
+    #   self.add_particle(x,y,rand(20..100)) if pressed
+    # }
+    self.add_timer(250,-1){|n,now,timer| self.add_particle(rand(Bi.w),rand(Bi.h),rand(20..100)) }
+
   end
   def add_particle(x,y,num)
     num.times{

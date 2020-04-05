@@ -9,6 +9,10 @@ end
 def create_world
   Bi.init 480,320, title:"Fiber"
 
+  root = Bi::Node.new
+  root.set_size Bi.w, Bi.h
+  root.set_color 0x33,0,0,0xff
+
   # create sprite
   img = Bi::TextureImage.new "assets/face01.png", false
   tex = Bi::Texture.new img,0,0,img.w,img.h
@@ -16,6 +20,7 @@ def create_world
   face.texture = tex
   face.set_position Bi.w/2,Bi.h/2
   face.anchor = :center
+  root.add face
 
   f = Fiber.new do
     360.times do
@@ -35,7 +40,7 @@ def create_world
 
   # layer
   layer = Bi::Layer.new
-  layer.root = face
+  layer.root = root
   layer.set_texture_image 0, img
   Bi::add_layer layer
 end

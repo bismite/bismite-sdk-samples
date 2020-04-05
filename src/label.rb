@@ -3,6 +3,8 @@ def create_world
   Bi::init 480,320, title:"Label"
 
   root = Bi::Node.new
+  root.set_size Bi.w, Bi.h
+  root.set_color 0x33,0,0,0xff
 
   img = Bi::TextureImage.new "assets/gohufont.png", false
   font = Bi::Font::read img, "assets/gohufont-bold-14-0.0.dat"
@@ -22,7 +24,7 @@ def create_world
   label.anchor = :center
   label.scale_x = label.scale_y = 3.0
   label.add_timer(500,-1){|n,now,timer|
-    label.set_text ["ABCDEF","(@o@)","('_`)","(^_^)"].sample
+    label.set_text ["Label","ABCDEF","(@o@)","('_`)","(^_^)"].sample
   }
   root.add label
 

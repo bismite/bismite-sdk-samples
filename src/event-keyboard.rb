@@ -3,6 +3,8 @@ def create_world
   Bi.init 480,320,title:"Texture"
 
   root = Bi::Node.new
+  root.set_size Bi.w, Bi.h
+  root.set_color 0x33,0,0,0xff
 
   keycode_table = Bi::KeyCode.constants.map{|c| [Bi::KeyCode.const_get(c),c] }.to_h
   scancode_table = Bi::ScanCode.constants.map{|c| [Bi::ScanCode.const_get(c),c] }.to_h
