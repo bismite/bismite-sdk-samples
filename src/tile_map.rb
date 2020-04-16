@@ -1,9 +1,10 @@
+require "lib/stats"
 
-class DungeonLayer < Bi::Layer
+class TileMapLayer < Bi::Layer
   include Singleton
 end
 
-class Dungeon < Bi::Node
+class TileMap < Bi::Node
 
   class Grid
     attr_accessor :type, :variation
@@ -66,13 +67,13 @@ class Dungeon < Bi::Node
       next unless pressed
       case keycode
       when Bi::KeyCode::LEFT
-        DungeonLayer.instance.camera_x -= 32
+        TileMapLayer.instance.camera_x -= 32
       when Bi::KeyCode::RIGHT
-        DungeonLayer.instance.camera_x += 32
+        TileMapLayer.instance.camera_x += 32
       when Bi::KeyCode::UP
-        DungeonLayer.instance.camera_y += 32
+        TileMapLayer.instance.camera_y += 32
       when Bi::KeyCode::DOWN
-        DungeonLayer.instance.camera_y -= 32
+        TileMapLayer.instance.camera_y -= 32
       end
     }
 
@@ -80,32 +81,18 @@ class Dungeon < Bi::Node
 
 end
 
-def add_fps_layer
-  img = Bi::TextureImage.new "assets/gohufont.png", true
-  font = Bi::Font.read img, "assets/gohufont-bold-14-0.0.dat"
-  label = Bi::Label.new font
-  label.anchor = :north_west
-  label.set_color 0,0,0,128
-  label.add_timer(1000,-1){|n,delta| n.set_text "FPS:#{Bi::fps.to_s}"}
-  label.set_position( 0, Bi.h )
-  # layer
-  layer = Bi::Layer.new
-  layer.root = label
-  layer.set_texture_image 0, img
-  Bi::add_layer layer
-end
 
-Bi.init 480,320, title:"Dungeon Example"
+Bi.init 480,320, title:$0
 Bi.debug = true
 
-layer = DungeonLayer.instance
+layer = TileMapLayer.instance
 wall = Bi::TextureImage.new "assets/wall.png", false
 floor = Bi::TextureImage.new "assets/floor.png", false
-layer.root = Dungeon.new(wall,floor)
+layer.root = TileMap.new(wall,floor)
 layer.set_texture_image 0, wall
 layer.set_texture_image 1, floor
 Bi::add_layer layer
 
-add_fps_layer
+stats $0
 
 Bi.start_run_loop

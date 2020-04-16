@@ -1,6 +1,7 @@
+require "lib/stats"
 
 def create_world
-  Bi.init 480,320,title:"Texture"
+  Bi.init 480,320,title:$0
 
   # texture image
   img = Bi::TextureImage.new "assets/face01.png", false
@@ -9,7 +10,7 @@ def create_world
   # sprite
   face = Bi::Sprite.new tex
   face.texture = tex
-  face.set_position 240,160
+  face.set_position Bi.w/2,Bi.h/2
   face.anchor = :center
 
   # layer
@@ -20,4 +21,5 @@ def create_world
 end
 
 create_world
+stats $0
 Bi::start_run_loop

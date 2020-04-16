@@ -1,6 +1,7 @@
+require "lib/stats"
 
 def create_world
-  Bi::init 480,320, title:"Label"
+  Bi::init 480,320, title:$0
 
   root = Bi::Node.new
   root.set_size Bi.w, Bi.h
@@ -9,15 +10,6 @@ def create_world
   img = Bi::TextureImage.new "assets/gohufont.png", false
   font = Bi::Font::read img, "assets/gohufont-bold-14-0.0.dat"
 
-  # label-1
-  label = Bi::Label.new font
-  label.set_text "FPS:"
-  label.anchor = :north_west
-  label.set_position( 0, Bi.h )
-  label.add_timer(1000,-1){|n,delta| n.set_text "FPS:#{Bi::fps.to_s}" }
-  root.add label
-
-  # label-2
   label = Bi::Label.new font
   label.set_position Bi.w/2, Bi.h/2
   label.set_color 0xff,0xff,0xff,0x33
@@ -36,4 +28,5 @@ def create_world
 end
 
 create_world
+stats $0
 Bi::start_run_loop

@@ -1,6 +1,7 @@
+require "lib/stats"
 
 def create_world
-  Bi.init 480,320,title:"spotlight"
+  Bi.init 480,320,title:$0
 
   # background
   bg_img = Bi::TextureImage.new "assets/sky.png", false
@@ -37,4 +38,5 @@ def create_world
 end
 
 create_world
+stats $0
 Bi::start_run_loop

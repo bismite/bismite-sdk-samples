@@ -1,3 +1,4 @@
+require "lib/stats"
 
 class Fiber
   def self.sleep(sec)
@@ -15,49 +16,48 @@ class CaveGeneratorExample < Bi::Node
     self.set_position 0,0
     self.set_size w,h
 
-    t = self.add_timer(1000,-1){|n,now,timer| Bi::title = "FPS:#{Bi::fps}" }
-    p [:fps_timer,t]
-
-    grid_width = 48
-    grid_height = 48
-    birth = [5,6,7,8]
-    death = [0,1,2,3]
-
     srand(Time.now.to_i)
 
-    @step = rand(6..14)
-    p [:total_step, @step]
+    birth = [5,6,7,8]
+    death = [0,1,2,3]
+    grid_width = (w/4).to_i
+    grid_height = (h/4).to_i
+    # step = rand(6..14)
+    step = 10
+    p [:step, step, :w, grid_width, :h, grid_height ]
 
     @grid = (grid_width*grid_height).times.map{ rand(100)<50?0:1 }
-    grid_width.times{|x| @grid[0+x] = @grid[(grid_height-1)*grid_width+x] = 0 }
-    grid_height.times{|y| @grid[grid_width*y+0] = @grid[grid_width*y+grid_width-1] = 0 }
+    border grid_width, grid_height
 
-    @nodes = grid_width.times.map{|x|
-      grid_height.times.map{|y|
-        n = Bi::Node.new
-        n.set_position x*4,y*4
-        n.set_size 4,4
-        add_child n
-        n
-      }
-    }.flatten
+    @nodes = grid_height.times.map{|y| grid_width.times.map{|x|
+      n = Bi::Node.new
+      n.set_position x*4,y*4
+      n.set_size 4,4
+      add_child n
+      n
+    }}.flatten
 
     update_grids
 
     f = Fiber.new do
-      @step.times do |i|
+      Fiber.sleep 2.0
+      step.times do |i|
         p [Time.now, :step, i]
         @grid = CellularAutomaton.step(@grid,grid_width,birth,death,true)
-        grid_width.times{|x| @grid[0+x] = @grid[(grid_height-1)*grid_width+x] = 0 }
-        grid_height.times{|y| @grid[grid_width*y+0] = @grid[grid_width*y+grid_width-1] = 0 }
+        border grid_width, grid_height
         self.update_grids
-        Fiber.sleep 0.8
+        Fiber.sleep 0.5
       end
       true
     end
 
     self.on_update{|node,delta| f = nil if f and f.resume }
 
+  end
+
+  def border(w,h)
+    w.times{|x| @grid[x] = @grid[(h-1)*w+x] = 0 }
+    h.times{|y| @grid[w*y] = @grid[w*y+w-1] = 0 }
   end
 
   def update_grids
@@ -72,8 +72,13 @@ class CaveGeneratorExample < Bi::Node
 
 end
 
-Bi.init 192,192, title:"cave generator"
+Bi.init 480,320, title:$0
 layer = Bi::Layer.new
-layer.root = CaveGeneratorExample.new(192,192)
+node = CaveGeneratorExample.new(Bi.w,Bi.h)
+root = Bi::Node.new
+root.add node
+node.x = Bi.w - node.w
+layer.root = root
 Bi::add_layer layer
+stats $0
 Bi.start_run_loop

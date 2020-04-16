@@ -1,3 +1,4 @@
+require "lib/stats"
 
 class Fiber
   def self.sleep(sec)
@@ -7,7 +8,7 @@ class Fiber
 end
 
 def create_world
-  Bi.init 480,320, title:"Fiber"
+  Bi.init 480,320, title:$0
 
   root = Bi::Node.new
   root.set_size Bi.w, Bi.h
@@ -46,5 +47,5 @@ def create_world
 end
 
 create_world
-Bi::debug = true
+stats $0
 Bi::start_run_loop

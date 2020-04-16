@@ -1,6 +1,7 @@
+require "lib/stats"
 
 def create_world
-  Bi.init 480,320,title:"Texture"
+  Bi.init 480,320,title:$0
 
   img = Bi::TextureImage.new "assets/face01.png", false
   tex = Bi::Texture.new img,0,0,img.w,img.h
@@ -21,4 +22,5 @@ def create_world
 end
 
 create_world
+stats $0
 Bi::start_run_loop

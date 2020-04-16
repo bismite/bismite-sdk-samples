@@ -1,3 +1,4 @@
+require "lib/stats"
 
 class ActionSample < Bi::Node
 
@@ -36,11 +37,11 @@ class ActionSample < Bi::Node
   end
 end
 
-Bi.init 480,320,title:"Action"
+Bi.init 480,320,title:$0
 img = Bi::TextureImage.new "assets/face01.png", false
 layer = Bi::Layer.new
 layer.root = ActionSample.new img
 layer.set_texture_image 0, img
 Bi::add_layer layer
-
+stats $0
 Bi::start_run_loop

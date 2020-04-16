@@ -1,3 +1,4 @@
+require "lib/stats"
 
 class Particle < Bi::Sprite
   attr_accessor :life, :life_max, :xx, :yy, :vx, :vy
@@ -53,7 +54,7 @@ class ParticleExample < Bi::Node
 end
 
 def create_world
-  Bi::init 480,320, title:"Click to add Particles"
+  Bi::init 480,320, title:$0
 
   img = Bi::TextureImage.new "assets/ball.png", false
   root = ParticleExample.new(480,320,img)
@@ -67,23 +68,6 @@ def create_world
   Bi::add_layer layer
 end
 
-def add_fps_layer
-  img = Bi::TextureImage.new "assets/gohufont.png", true
-  font = Bi::Font::read img, "assets/gohufont-bold-14-0.0.dat"
-  label = Bi::Label.new font
-  label.anchor = :north_west
-  label.set_color 0,0,0,128
-  label.add_timer(1000,-1){|n,now,timer| n.set_text "FPS:#{Bi::fps.to_s}" }
-  label.set_position( 0, Bi.h )
-  # layer
-  layer = Bi::Layer.new
-  layer.root = label
-  layer.set_texture_image 0, img
-  Bi::add_layer layer
-end
-
 create_world
-add_fps_layer
-GC.start
-Bi::debug = true
+stats $0
 Bi::start_run_loop

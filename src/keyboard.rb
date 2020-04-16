@@ -1,6 +1,7 @@
+require "lib/stats"
 
 def create_world
-  Bi.init 480,320,title:"Texture"
+  Bi.init 480,320,title: $0
 
   root = Bi::Node.new
   root.set_size Bi.w, Bi.h
@@ -15,7 +16,7 @@ def create_world
   label = Bi::Label.new font
   label.anchor = :north_west
   label.set_text "Press any Key"
-  label.set_position 10, Bi.h/2
+  label.set_position 10,20
   root.add label
 
   root.on_key_input{|node,scancode,keycode,mod,pressed|
@@ -31,4 +32,5 @@ def create_world
 end
 
 create_world
+stats $0
 Bi::start_run_loop

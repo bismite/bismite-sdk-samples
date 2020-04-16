@@ -1,3 +1,4 @@
+require "lib/stats"
 
 class Menu < Bi::Node
   attr_accessor :selected_background_color
@@ -50,7 +51,7 @@ class Menu < Bi::Node
 end
 
 def create_world
-  Bi::init 480,320, title:"click menu"
+  Bi::init 480,320, title:$0
 
   img = Bi::TextureImage.new "assets/gohufont.png", true
   font = Bi::Font::read img, "assets/gohufont-14-0.0.dat"
@@ -79,5 +80,5 @@ def create_world
 end
 
 create_world
-GC.start
+stats $0
 Bi::start_run_loop
