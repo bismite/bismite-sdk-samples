@@ -1,14 +1,15 @@
 require "lib/stats"
 
-def create_world
-  Bi::init 480,320, title:$0
+Bi::init 480,320, title:__FILE__
+
+Bi::Archive.new("assets.dat",0x5).load do |assets|
 
   root = Bi::Node.new
   root.set_size Bi.w, Bi.h
   root.set_color 0x33,0,0,0xff
 
-  img = Bi::TextureImage.new "assets/gohufont.png", false
-  font = Bi::Font::read img, "assets/gohufont-bold-14-0.0.dat"
+  texture = assets.texture "assets/gohufont.png", false
+  font = Bi::Font.new texture, assets.read("assets/gohufont-bold-14-0.0.dat")
 
   label = Bi::Label.new font
   label.set_position Bi.w/2, Bi.h/2
@@ -23,10 +24,10 @@ def create_world
   # layer
   layer = Bi::Layer.new
   layer.root = root
-  layer.set_texture_image 0, img
+  layer.set_texture 0, texture
   Bi::add_layer layer
+
+  stats assets
 end
 
-create_world
-stats $0
 Bi::start_run_loop

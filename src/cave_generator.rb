@@ -72,13 +72,15 @@ class CaveGeneratorExample < Bi::Node
 
 end
 
-Bi.init 480,320, title:$0
-layer = Bi::Layer.new
-node = CaveGeneratorExample.new(Bi.w,Bi.h)
-root = Bi::Node.new
-root.add node
-node.x = Bi.w - node.w
-layer.root = root
-Bi::add_layer layer
-stats $0
+Bi.init 480,320, title:__FILE__
+Bi::Archive.new("assets.dat",0x5).load do |assets|
+  layer = Bi::Layer.new
+  node = CaveGeneratorExample.new(Bi.w,Bi.h)
+  root = Bi::Node.new
+  root.add node
+  node.x = Bi.w - node.w
+  layer.root = root
+  Bi::add_layer layer
+  stats assets
+end
 Bi.start_run_loop

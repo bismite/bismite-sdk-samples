@@ -1,15 +1,21 @@
 require "lib/stats"
-require "lib/assets.rb"
 require "lib/primitive.rb"
 
-class LineIntersection < Bi::Node
-
-  def initialize
+class LineIntersectionLayer < Bi::Layer
+  def initialize(assets)
     super
+    texture = assets.texture("assets/sky.png")
+    self.root = LineIntersection.new(texture.to_sprite)
+    self.set_texture 0, texture
+  end
+end
 
+class LineIntersection < Bi::Node
+  def initialize(sky)
+    super
     self.set_size Bi.w, Bi.h
 
-    @sky = Bi::Sprite.new Assets.texture "assets/sky.png"
+    @sky = sky
     @sky.scale_x = Bi.w / @sky.w
     @sky.scale_y = Bi.h / @sky.h
     self.add @sky
@@ -22,11 +28,6 @@ class LineIntersection < Bi::Node
     @line.x = Bi.w/2
     @line.y = Bi.h/2
     self.add @line
-
-    @ball = Bi::Sprite.new Assets.texture "assets/ball.png"
-    @ball.anchor = :center
-    @ball.set_color 0,0xff,0,0xff
-    self.add @ball
 
     @lines = []
     add_line 1000
@@ -51,9 +52,6 @@ class LineIntersection < Bi::Node
       y = Bi.h/2 + distance * Math::sin(angle)
       point(x,y)
     }
-
-    # self.on_move_cursor{|node,x,y| point x,y }
-
   end
 
   def remove_lines
@@ -80,8 +78,6 @@ class LineIntersection < Bi::Node
     sx = @line.x
     sy = @line.y
 
-    @ball.visible = false
-
     intersection = nil
     collide_block = nil
 
@@ -103,15 +99,10 @@ class LineIntersection < Bi::Node
 
 end
 
-Bi.init 480,320, title:$0
-Assets.load_archive("assets.dat") do
-  layer = Bi::Layer.new
-  layer.root = LineIntersection.new
-  Assets.texture_images.each.with_index{|image,i|
-    layer.set_texture_image i, image
-  }
-  Bi::add_layer layer
-  stats $0
+Bi.init 480,320, title:__FILE__
+Bi::Archive.new("assets.dat",0x5).load do |assets|
+  Bi::add_layer LineIntersectionLayer.new(assets)
+  stats assets
 end
 
 Bi::start_run_loop

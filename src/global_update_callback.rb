@@ -1,26 +1,20 @@
 require "lib/stats"
 
-def create_world
-  Bi.init 480,320,title:$0
+Bi.init 480,320, title:__FILE__
+Bi::Archive.new("assets.dat",0x5).load do |assets|
+  texture = assets.texture "assets/face01.png"
 
-  img = Bi::TextureImage.new "assets/face01.png", false
-  tex = Bi::Texture.new img,0,0,img.w,img.h
-
-  # sprite
-  face = Bi::Sprite.new tex
-  face.texture = tex
+  face = texture.to_sprite
   face.set_position Bi.w/2, Bi.h/2
   face.anchor = :center
 
-  # layer
   layer = Bi::Layer.new
   layer.root = face
-  layer.set_texture_image 0, img
+  layer.set_texture 0, texture
   Bi::add_layer layer
 
   Bi.add_update_callback{|delta| face.angle += 1 }
+  stats assets
 end
 
-create_world
-stats $0
 Bi::start_run_loop

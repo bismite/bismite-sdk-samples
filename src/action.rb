@@ -2,13 +2,13 @@ require "lib/stats"
 
 class ActionSample < Bi::Node
 
-  def initialize(img)
+  def initialize(texture)
     super
     self.set_position 0,0
     self.set_size Bi.w,Bi.h
     self.set_color 0x33,0,0,0xff
 
-    face = Bi::Sprite.new Bi::Texture.new(img,0,0,img.w,img.h)
+    face = texture.to_sprite
     face.anchor = :center
     face.set_position Bi.w/2, Bi.h/2
     self.add face
@@ -37,11 +37,15 @@ class ActionSample < Bi::Node
   end
 end
 
-Bi.init 480,320,title:$0
-img = Bi::TextureImage.new "assets/face01.png", false
-layer = Bi::Layer.new
-layer.root = ActionSample.new img
-layer.set_texture_image 0, img
-Bi::add_layer layer
-stats $0
+Bi.init 480,320,title: __FILE__
+
+Bi::Archive.new("assets.dat",0x5).load do |assets|
+  texture = assets.texture "assets/face01.png"
+  layer = Bi::Layer.new
+  layer.root = ActionSample.new texture
+  layer.set_texture 0, texture
+  Bi::add_layer layer
+  stats assets
+end
+
 Bi::start_run_loop

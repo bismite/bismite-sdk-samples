@@ -1,13 +1,14 @@
 
-def stats(name)
+def stats(archive)
   root = Bi::Node.new
-  img = Bi::TextureImage.new "assets/gohufont.png", false
-  font = Bi::Font::read img, "assets/gohufont-11-0.0.dat"
+  texture = archive.texture "assets/gohufont.png"
+  layout = archive.read("assets/gohufont-11-0.0.dat")
+  font = Bi::Font.new texture, layout
 
   title = Bi::Label.new font
   title.anchor = :north_east
   title.set_color 0,0,0,128
-  title.set_text name
+  title.set_text Bi.title
   title.set_position( Bi.w, Bi.h )
   root.add title
 
@@ -49,6 +50,6 @@ def stats(name)
   # layer
   layer = Bi::Layer.new
   layer.root = root
-  layer.set_texture_image 0, img
+  layer.set_texture 0, texture
   Bi::add_layer layer
 end

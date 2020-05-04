@@ -4,15 +4,12 @@ require "lib/stats.rb"
 
 class RectCollide < Bi::Node
 
-  def initialize
+  def initialize(sky_texture,ball_texture)
     super
 
     self.set_size Bi.w, Bi.h
 
-    @sky = Bi::Sprite.new Assets.texture "assets/sky.png"
-    @sky.scale_x = Bi.w / @sky.w
-    @sky.scale_y = Bi.h / @sky.h
-    self.add @sky
+    self.add sky_texture.to_sprite
 
     @blocks = []
     50.times do
@@ -51,7 +48,7 @@ class RectCollide < Bi::Node
     @line.y = Bi.h/2
     self.add @line
 
-    @ball = Bi::Sprite.new Assets.texture "assets/ball.png"
+    @ball = ball_texture.to_sprite
     @ball.anchor = :center
     self.add @ball
 
@@ -158,16 +155,17 @@ class RectCollide < Bi::Node
 end
 
 
-Bi.init 480,320, title:$0
-Assets.load_archive("assets.dat") do
+Bi.init 480,320, title:__FILE__
+Bi::Archive.new("assets.dat",0x5).load do |assets|
   srand(Time.now.to_i)
+  sky = assets.texture "assets/sky.png"
+  ball = assets.texture "assets/ball.png"
   layer = Bi::Layer.new
-  layer.root = RectCollide.new
-  Assets.texture_images.each.with_index{|image,i|
-    layer.set_texture_image i, image
-  }
+  layer.root = RectCollide.new sky,ball
+  layer.set_texture 0, sky
+  layer.set_texture 1,ball
   Bi::add_layer layer
-  stats $0
+  stats assets
 end
 
 Bi::start_run_loop

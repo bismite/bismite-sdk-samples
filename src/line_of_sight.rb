@@ -2,14 +2,25 @@ require "lib/assets.rb"
 require "lib/primitive.rb"
 require "lib/stats.rb"
 
+class LineOfSightLayer < Bi::Layer
+  def initialize(assets)
+    super
+    sky_texture = assets.texture "assets/sky.png"
+    ball_texture = assets.texture "assets/ball.png"
+    self.set_texture 0, sky_texture
+    self.set_texture 1, ball_texture
+    self.root = LineOfSight.new(sky_texture,ball_texture)
+  end
+end
+
 class LineOfSight < Bi::Node
 
-  def initialize
+  def initialize(sky_texture,ball_texture)
     super
 
     self.set_size Bi.w, Bi.h
 
-    @sky = Bi::Sprite.new Assets.texture "assets/sky.png"
+    @sky = sky_texture.to_sprite
     @sky.scale_x = Bi.w / @sky.w
     @sky.scale_y = Bi.h / @sky.h
     self.add @sky
@@ -23,7 +34,7 @@ class LineOfSight < Bi::Node
     @line.y = Bi.h/2
     self.add @line
 
-    @ball = Bi::Sprite.new Assets.texture "assets/ball.png"
+    @ball = ball_texture.to_sprite
     @ball.anchor = :center
     @ball.set_color 0,0xff,0,0xff
     self.add @ball
@@ -106,16 +117,13 @@ class LineOfSight < Bi::Node
 
 end
 
-Bi.init 480,320, title:$0
-Assets.load_archive("assets.dat") do
+Bi.init 480,320, title:__FILE__
+
+Bi::Archive.new("assets.dat",0x5).load do |assets|
   srand(Time.now.to_i)
-  layer = Bi::Layer.new
-  layer.root = LineOfSight.new
-  Assets.texture_images.each.with_index{|image,i|
-    layer.set_texture_image i, image
-  }
+  layer = LineOfSightLayer.new assets
   Bi::add_layer layer
-  stats $0
+  stats assets
 end
 
 Bi::start_run_loop

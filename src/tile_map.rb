@@ -47,8 +47,8 @@ class TileMap < Bi::Node
     t = self.add_timer(1000,-1){|n,now,timer| Bi::title = "FPS:#{Bi::fps}" }
 
     @tiles = {
-      wall: 3.times.map{|i| Bi::Texture.new(wall,i*32,0,32,32) },
-      floor: 3.times.map{|i| Bi::Texture.new(floor,i*32,0,32,32) }
+      wall: 3.times.map{|i| Bi::TextureMapping.new(wall,i*32,0,32,32) },
+      floor: 3.times.map{|i| Bi::TextureMapping.new(floor,i*32,0,32,32) }
     }
 
     make_dungeon
@@ -82,17 +82,15 @@ class TileMap < Bi::Node
 end
 
 
-Bi.init 480,320, title:$0
-Bi.debug = true
-
-layer = TileMapLayer.instance
-wall = Bi::TextureImage.new "assets/wall.png", false
-floor = Bi::TextureImage.new "assets/floor.png", false
-layer.root = TileMap.new(wall,floor)
-layer.set_texture_image 0, wall
-layer.set_texture_image 1, floor
-Bi::add_layer layer
-
-stats $0
-
+Bi.init 480,320, title:__FILE__
+Bi::Archive.new("assets.dat",0x5).load do |assets|
+  layer = TileMapLayer.instance
+  wall = assets.texture "assets/wall.png"
+  floor = assets.texture "assets/floor.png"
+  layer.root = TileMap.new(wall,floor)
+  layer.set_texture 0, wall
+  layer.set_texture 1, floor
+  Bi::add_layer layer
+  stats assets
+end
 Bi.start_run_loop

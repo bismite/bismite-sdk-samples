@@ -2,12 +2,12 @@ require "lib/stats"
 
 class Particle < Bi::Sprite
   attr_accessor :life, :life_max, :xx, :yy, :vx, :vy
-  def initialize(tex,x,y)
-    super tex
+  def initialize(texture_mapping,x,y)
+    super texture_mapping
     self.set_position x,y
     self.anchor = :center
     self.set_color rand(0xFF),rand(0xFF),rand(0xFF),0xff
-    @life = @life_max = 200 + rand(200)
+    @life = @life_max = 100 + rand(100)
     @vx = (rand(nil)-0.5) * 3
     @vy = (rand(nil)-0.5) * 3
     @xx = x.to_f
@@ -29,45 +29,49 @@ class Particle < Bi::Sprite
   end
 end
 
-class ParticleExample < Bi::Node
-  def initialize(w,h,img)
-    super()
-    self.set_color 32,0,0,0xff
-    self.set_position 0,0
-    self.set_size w,h
-    @img = img
-    @tex = Bi::Texture.new @img,0,0,@img.w,@img.h
+class ParticleLayer < Bi::Layer
+  def initialize(assets)
+    super
 
-    # self.on_click{|node,x,y,button,pressed|
-    #   self.add_particle(x,y,rand(20..100)) if pressed
-    # }
-    self.add_timer(250,-1){|n,now,timer| self.add_particle(rand(Bi.w),rand(Bi.h),rand(20..100)) }
+    sky_texture = assets.texture "assets/sky.png"
+    ball_texture = assets.texture "assets/ball.png", false
+
+    self.set_texture 0, ball_texture
+    self.set_texture 1, sky_texture
+    self.blend_src = Bi::Layer::GL_SRC_ALPHA
+    self.blend_dst = Bi::Layer::GL_ONE
+
+    self.root = Bi::Node.new
+    self.root.add sky_texture.to_sprite
+
+    @texture = ball_texture
+    @texture_mapping = Bi::TextureMapping.new @texture,0,0,@texture.w,@texture.h
+
+    @frame_count = 0
+    self.root.on_update{|node,delta|
+      if @frame_count < 30
+        @frame_count += 1
+      else
+        @frame_count = 0
+        self.add_particle rand(Bi.w), rand(Bi.h), rand(20..100)
+      end
+    }
 
   end
   def add_particle(x,y,num)
     num.times{
-      particle = Particle.new @tex, x, y
+      particle = Particle.new @texture_mapping, x, y
       particle.on_update :my_update
-      self.add particle
+      self.root.add particle
     }
   end
 end
 
-def create_world
-  Bi::init 480,320, title:$0
 
-  img = Bi::TextureImage.new "assets/ball.png", false
-  root = ParticleExample.new(480,320,img)
-
-  # layer
-  layer = Bi::Layer.new
-  layer.root = root
-  layer.set_texture_image 0, img
-  layer.blend_src = Bi::Layer::GL_SRC_ALPHA
-  layer.blend_dst = Bi::Layer::GL_ONE
-  Bi::add_layer layer
+Bi::init 480,320, title:__FILE__
+Bi::Archive.new("assets.dat",0x5).load do |assets|
+  Bi::add_layer ParticleLayer.new(assets)
+  stats assets
 end
 
-create_world
-stats $0
 Bi::start_run_loop

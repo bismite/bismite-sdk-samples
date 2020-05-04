@@ -1,42 +1,37 @@
 require "lib/stats"
 
-def create_world
-  Bi.init 480,320,title:$0
+Bi::init 480,320, title:__FILE__
+Bi::Archive.new("assets.dat",0x5).load do |assets|
 
-  # background
-  bg_img = Bi::TextureImage.new "assets/sky.png", false
-  bg = Bi::Sprite.new Bi::Texture.new bg_img,0,0,bg_img.w,bg_img.h
-  # shadow
+  # 1st layer (shadowed sky)
+  sky_texture = assets.texture "assets/sky.png"
+  sky = sky_texture.to_sprite
   shadow = Bi::Node.new
-  shadow.set_position 0,0
-  shadow.set_size 640,480
+  shadow.set_size Bi.w,Bi.h
   shadow.set_color 0,0,0,128
-  bg.add shadow
+  sky.add shadow
+  layer1 = Bi::Layer.new
+  layer1.root = sky
+  layer1.set_texture 0, sky_texture
 
-  # layer
-  layer = Bi::Layer.new
-  layer.root = bg
-  layer.set_texture_image 0, bg_img
-  Bi::add_layer layer
-
-  # sportlight
-  img = Bi::TextureImage.new "assets/circle256.png", false
-  spotlight = Bi::Sprite.new Bi::Texture.new img,0,0,img.w,img.h
+  # 2nd layer (spotlight)
+  spotlight_texture = assets.texture "assets/circle256.png"
+  spotlight = spotlight_texture.to_sprite
   spotlight.anchor = :center
   spotlight.set_position Bi.w/2, Bi.h/2
-
-  # spotlight layer
-  layer = Bi::Layer.new
-  layer.root = spotlight
-  layer.set_texture_image 0, img
-  layer.blend_src = Bi::Layer::GL_DST_COLOR
-  layer.blend_dst = Bi::Layer::GL_ONE
-  Bi::add_layer layer
+  layer2 = Bi::Layer.new
+  layer2.root = spotlight
+  layer2.set_texture 0, spotlight_texture
+  layer2.blend_src = Bi::Layer::GL_DST_COLOR
+  layer2.blend_dst = Bi::Layer::GL_ONE
 
   # spin
   spotlight.on_update{|n,delta| n.angle+=1 }
+
+  Bi::add_layer layer1
+  Bi::add_layer layer2
+
+  stats assets
 end
 
-create_world
-stats $0
 Bi::start_run_loop

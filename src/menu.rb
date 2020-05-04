@@ -1,3 +1,4 @@
+require "lib/assets"
 require "lib/stats"
 
 class Menu < Bi::Node
@@ -50,16 +51,16 @@ class Menu < Bi::Node
   end
 end
 
-def create_world
-  Bi::init 480,320, title:$0
-
-  img = Bi::TextureImage.new "assets/gohufont.png", true
-  font = Bi::Font::read img, "assets/gohufont-14-0.0.dat"
-  face_image = Bi::TextureImage.new "assets/face01.png", false
+Bi::init 480,320, title:__FILE__
+Bi::Archive.new("assets.dat",0x5).load do |assets|
+  font_texture = assets.texture "assets/gohufont.png"
+  layout = assets.read("assets/gohufont-11-0.0.dat")
+  font = Bi::Font.new font_texture, layout
 
   root = Bi::Node.new
 
-  face = Bi::Sprite.new Bi::Texture.new(face_image,0,0,face_image.w,face_image.h)
+  face_texture = assets.texture "assets/face01.png"
+  face = face_texture.to_sprite
   face.anchor = :center
   face.set_position 240,160
   root.add face
@@ -74,11 +75,11 @@ def create_world
   # layer
   layer = Bi::Layer.new
   layer.root = root
-  layer.set_texture_image 0, img
-  layer.set_texture_image 1, face_image
+  layer.set_texture 0, font_texture
+  layer.set_texture 1, face_texture
   Bi::add_layer layer
+
+  stats assets
 end
 
-create_world
-stats $0
 Bi::start_run_loop
