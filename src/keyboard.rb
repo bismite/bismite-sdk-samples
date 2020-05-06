@@ -19,6 +19,7 @@ Bi::Archive.new("assets.dat",0x5).load do |assets|
     label.anchor = :south_east
     label.text = "Press any Key"
     label.set_position Bi.w - 10, 10 + i*20
+    label.set_color 0xff, 0xff, 0xff, 0xff - i*10
     root.add label
     label
   }
@@ -30,7 +31,7 @@ Bi::Archive.new("assets.dat",0x5).load do |assets|
     else
       mod = keymod_table.keys.map{|k| (k!=0 and mod&k==k) ? keymod_table[k] : nil }.compact.join(",")
     end
-    new_text = "#{pressed} ScanCode:#{scancode_table[scancode]} KeyCode:#{keycode_table[keycode]} Mod:#{mod}"
+    new_text = "Mod:#{mod} #{pressed} ScanCode:#{scancode_table[scancode]} KeyCode:#{keycode_table[keycode]}"
 
     texts = labels.map{|l| l.text }
     texts.pop

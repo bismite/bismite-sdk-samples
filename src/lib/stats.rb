@@ -7,14 +7,14 @@ def stats(archive)
 
   title = Bi::Label.new font
   title.anchor = :north_east
-  title.set_color 0,0,0,128
+  title.set_background_color 0,0,0,128
   title.set_text Bi.title
   title.set_position( Bi.w, Bi.h )
   root.add title
 
   label = Bi::Label.new font
   label.anchor = :north_west
-  label.set_color 0,0,0,128
+  label.set_background_color 0,0,0,128
   label.set_text "FPS:"
   label.add_timer(1000,-1){|n,now,timer| n.set_text "FPS:#{Bi::fps.to_s}" }
   label.set_position( 0, Bi.h )
@@ -43,7 +43,7 @@ def stats(archive)
     label.set_text str
     label.anchor = :north_west
     label.set_position( 0, Bi.h - 11 - y*11 )
-    label.set_color 0,0,0,128
+    label.set_background_color 0,0,0,128
     root.add label
   }
 
