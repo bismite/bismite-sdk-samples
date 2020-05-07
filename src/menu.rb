@@ -13,16 +13,16 @@ class Menu < Bi::Node
     self.on_click {|n,x,y,button,press| self.check_menu_click(x,y,button,press) }
     @selected_background_color = [0xff,0xff,0xff,128]
     @unselected_background_color = [0,0,0,0]
-    @vertical_margin = 10
+    @vertical_margin = 20
   end
   def check_menu_select(x,y)
     swallow = false
     @items.each{|item|
       if item.include?(x,y)
-        item.set_color(*@selected_background_color)
+        item.set_background_color(*@selected_background_color)
         swallow = true
       else
-        item.set_color(*@unselected_background_color)
+        item.set_background_color(*@unselected_background_color)
       end
     }
     swallow
@@ -31,7 +31,7 @@ class Menu < Bi::Node
     swallow = false
     @items.each_with_index{|item,i|
       if item.include?(x,y)
-        item.set_color(*@selected_background_color)
+        item.set_background_color(*@selected_background_color)
         @callbacks[i].call item
         swallow = true
         break
@@ -42,7 +42,7 @@ class Menu < Bi::Node
   def add_item(title,&block)
     label = Bi::Label.new @font
     label.set_text title
-    # label.anchor = :north_west
+    label.scale_x = label.scale_y = 2.0
     label.anchor = :center
     self.add label
     label.set_position 0, -@items.size*(@font.size+@vertical_margin)
