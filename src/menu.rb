@@ -1,4 +1,3 @@
-require "lib/assets"
 require "lib/stats"
 
 class Menu < Bi::Node

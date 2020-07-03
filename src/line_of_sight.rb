@@ -1,4 +1,3 @@
-require "lib/assets.rb"
 require "lib/primitive.rb"
 require "lib/stats.rb"
 
