@@ -9,7 +9,7 @@ def run(cmd)
 end
 
 def screenshot(name)
-  pid = spawn "birun src/#{name}.rb"
+  pid = spawn "birun src/#{name}.rb short"
   puts "pid: #{pid}"
 
   wid=""
