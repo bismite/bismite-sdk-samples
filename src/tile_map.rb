@@ -6,6 +6,8 @@ end
 
 class TileMap < Bi::Node
 
+  TILE_SIZE = 16
+
   class Grid
     attr_accessor :type, :variation
     def initialize(type,variation)
@@ -41,14 +43,14 @@ class TileMap < Bi::Node
     super
     w = Bi.w
     h = Bi.h
-    self.scale_x = self.scale_y = 0.5
+    # self.scale_x = self.scale_y = 0.5
     self.set_position 0,0
     self.set_size w,h
     t = self.add_timer(1000,-1){|n,now,timer| Bi::title = "FPS:#{Bi::fps}" }
 
     @tiles = {
-      wall: 3.times.map{|i| Bi::TextureMapping.new(wall,i*32,0,32,32) },
-      floor: 3.times.map{|i| Bi::TextureMapping.new(floor,i*32,0,32,32) }
+      wall: 3.times.map{|i| Bi::TextureMapping.new(wall,i*TILE_SIZE,0,TILE_SIZE,TILE_SIZE) },
+      floor: 3.times.map{|i| Bi::TextureMapping.new(floor,i*TILE_SIZE,0,TILE_SIZE,TILE_SIZE) }
     }
 
     make_dungeon
@@ -57,7 +59,7 @@ class TileMap < Bi::Node
       @grid_height.times.map{|y|
         g = @grid[y*@grid_width+x]
         n = Bi::Sprite.new @tiles[g.type][g.variation]
-        n.set_position x*32, y*32
+        n.set_position x*TILE_SIZE, y*TILE_SIZE
         self.add n
         n
       }
@@ -67,13 +69,13 @@ class TileMap < Bi::Node
       next unless pressed
       case keycode
       when Bi::KeyCode::LEFT
-        TileMapLayer.instance.camera_x -= 32
+        TileMapLayer.instance.camera_x -= TILE_SIZE
       when Bi::KeyCode::RIGHT
-        TileMapLayer.instance.camera_x += 32
+        TileMapLayer.instance.camera_x += TILE_SIZE
       when Bi::KeyCode::UP
-        TileMapLayer.instance.camera_y += 32
+        TileMapLayer.instance.camera_y += TILE_SIZE
       when Bi::KeyCode::DOWN
-        TileMapLayer.instance.camera_y -= 32
+        TileMapLayer.instance.camera_y -= TILE_SIZE
       end
     }
 
@@ -85,8 +87,8 @@ end
 Bi.init 480,320, title:__FILE__
 Bi::Archive.new("assets.dat",0x5).load do |assets|
   layer = TileMapLayer.instance
-  wall = assets.texture "assets/wall.png"
-  floor = assets.texture "assets/floor.png"
+  wall = assets.texture "assets/wall16.png"
+  floor = assets.texture "assets/floor16.png"
   layer.root = TileMap.new(wall,floor)
   layer.set_texture 0, wall
   layer.set_texture 1, floor
