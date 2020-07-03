@@ -21,12 +21,14 @@ def stats(archive)
   root.add label
 
   info = []
-  info << "GL:         #{Bi::Version.gl_version}"
-  info << "GL Vendor:  #{Bi::Version.gl_vendor}"
-  info << "GL Renderer:#{Bi::Version.gl_renderer}"
-  info << "GL Shader:  #{Bi::Version.gl_shading_language_version}"
+  unless ARGV.include? "short"
+    info << "OS:         #{OS.sysname}(#{OS.machine})"
+    info << "GL:         #{Bi::Version.gl_version}"
+    info << "GL Vendor:  #{Bi::Version.gl_vendor}"
+    info << "GL Renderer:#{Bi::Version.gl_renderer}"
+    info << "GL Shader:  #{Bi::Version.gl_shading_language_version}"
+  end
   info << "GLEW:       #{Bi::Version.glew_version}"
-  info << "OS:         #{OS.sysname}(#{OS.machine})"
   info << "mruby:      #{MRUBY_DESCRIPTION}"
   info << "bicore:     #{Bi::Version.bicore}"
   info << "mruby-bicore: #{Bi::Version.mruby_bicore}"
