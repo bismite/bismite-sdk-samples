@@ -21,7 +21,7 @@ def stats(archive)
   root.add label
 
   info = []
-  if not Bi::Version.emscripten and not ARGV.include? "short"
+  if Bi::Version.emscripten or not ARGV.include? "short"
     info << "OS:         #{OS.sysname}(#{OS.machine})"
     info << "GL:         #{Bi::Version.gl_version}"
     info << "GL Vendor:  #{Bi::Version.gl_vendor}"
