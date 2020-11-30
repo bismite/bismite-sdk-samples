@@ -1,8 +1,18 @@
 require "lib/stats"
 
+if Bi::Version.emscripten
+SHADER_HEADER=<<EOS
+#version 100
+precision highp float;
+EOS
+else
+SHADER_HEADER=<<EOS
+#version 120
+EOS
+end
 
 VERTEX_SHADER=<<EOS
-#version 120
+#{SHADER_HEADER}
 uniform mat4 projection;
 uniform mat4 view;
 attribute vec2 vertex;
@@ -39,7 +49,7 @@ void main()
 EOS
 
 FRAGMENT_SHADER_HEADER=<<EOS
-#version 120
+#{SHADER_HEADER}
 varying vec3 uv;
 varying vec4 color;
 uniform sampler2D sampler[8];
@@ -82,7 +92,7 @@ void main()
 {
   int samplerID = int(uv.z);
   if( 0 <= samplerID && samplerID <= 7 ) {
-    float beat = clamp(abs(sin(time*5)),0.8,1.0);
+    float beat = clamp(abs(sin(time*5.0)),0.8,1.0);
     float d = distance( gl_FragCoord.xy/resolution, vec2(0.5) );
     vec4 c = getTextureColor(samplerID, uv.xy) * color;
     // heart beat
@@ -94,7 +104,7 @@ void main()
 }
 EOS
 
-Bi.init 480,320,title:__FILE__
+Bi.init 480,320,title:__FILE__,hidpi:true
 
 Bi::Archive.new("assets.dat",0x5,true).load do |assets|
   stats assets
