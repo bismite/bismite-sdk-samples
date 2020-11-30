@@ -21,7 +21,7 @@ class Particle < Bi::Sprite
       self.set_alpha(0xff*@life/@life_max)
     end
   end
-  def my_update(n,delta)
+  def my_update(n)
     n.life -= 1
     n.xx += n.vx
     n.yy += n.vy

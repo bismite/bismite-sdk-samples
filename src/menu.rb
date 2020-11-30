@@ -52,8 +52,8 @@ end
 
 Bi::init 480,320, title:__FILE__
 Bi::Archive.new("assets.dat",0x5).load do |assets|
-  font_texture = assets.texture "assets/gohufont.png"
-  layout = assets.read("assets/gohufont-11-0.0.dat")
+  font_texture = assets.texture "assets/mixed.png"
+  layout = assets.read("assets/large-bold.dat")
   font = Bi::Font.new font_texture, layout
 
   root = Bi::Node.new
@@ -68,6 +68,7 @@ Bi::Archive.new("assets.dat",0x5).load do |assets|
   menu.add_item("RED"){|item| face.set_color 0xff,0,0,0xff }
   menu.add_item("GREEN"){|item| face.set_color 0,0xff,0,0xff }
   menu.add_item("BLUE"){|item| face.set_color 0,0,0xff,0xff }
+  menu.add_item("WHITE"){|item| face.set_color 0xff,0xff,0xff,0xff }
   menu.set_position 240,160
   root.add menu
 

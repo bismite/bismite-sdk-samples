@@ -9,8 +9,8 @@ Bi::Archive.new("assets.dat",0x5).load do |assets|
   root = Bi::Node.new
   root.set_size Bi.w, Bi.h
 
-  texture = assets.texture "assets/gohufont.png", false
-  font = Bi::Font.new texture, assets.read("assets/gohufont-bold-14-0.0.dat")
+  texture = assets.texture "assets/mixed.png", false
+  font = Bi::Font.new texture, assets.read("assets/large-bold.dat")
 
   label = Bi::Label.new font
   label.set_position Bi.w/2, Bi.h/2
