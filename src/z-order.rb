@@ -2,7 +2,6 @@ require "lib/stats"
 
 Bi.init 480,320,title:__FILE__
 
-
 Bi::Archive.new("assets.dat",0x5,true).load do |assets|
   stats assets
 
