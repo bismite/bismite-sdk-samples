@@ -20,8 +20,8 @@ class LineOfSight < Bi::Node
     self.set_size Bi.w, Bi.h
 
     @sky = sky_texture.to_sprite
-    @sky.scale_x = Bi.w / @sky.w
-    @sky.scale_y = Bi.h / @sky.h
+    @sky.scale_x = Bi.w.to_f / @sky.w
+    @sky.scale_y = Bi.h.to_f / @sky.h
     self.add @sky
 
     @line = Bi::Node.new
